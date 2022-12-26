@@ -1,0 +1,187 @@
+{% extends 'TiendaMPRO/main.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+	<div class="col-lg-6">
+		<br>
+		<div class="box-element" id="form-wrapper">
+			<form id="form">
+				{% csrf_token %}
+				<hr>
+				<!-- CHECKBOX PARA FORMA DE RETIRO -->
+				<div  class="form-field">
+					<label for="retiro">Envio Domicilio</label>
+					<input class="entrega-checkbox" type="checkbox" name="retiro" id="entrega">
+				</div>
+				<!-- FORMULARIO EN CASO DE ENVIO -->
+				<div id="shipping-info" class="info-envio hidden">
+					<hr>
+					<p>Informacion de envio:</p>
+					<hr>
+					<div class="form-field">
+						<input class="form-control" type="text" name="address" placeholder="Direccion..">
+					</div>
+					<div class="form-field">
+						<input class="form-control" type="text" name="city" placeholder="Ciudad..">
+					</div>
+					<div class="form-field">
+						<input class="form-control" type="text" name="state" placeholder="Estado/Region..">
+					</div>
+					<div class="form-field">
+						<input class="form-control" type="text" name="zipcode" placeholder="Codigo Postal..">
+					</div>
+					<div class="form-field">
+						<input class="form-control" type="text" name="country" placeholder="Pais..">
+					</div>
+				</div>
+				<!-- FORMULARIO EN CASO DE RETIRO EN TIENDA -->
+				<div id="info-sucursal" class="info-retiro">
+					<hr>
+					<p>Sucursal de retiro:</p>
+					<hr>
+					<div class="form-field">
+						<label for="tienda">Tienda</label>
+						
+						<select title="Tienda" class="form-control" name="tienda" >
+							<option value="0">Seleccionar</option>
+							{% for d in direcciones %}
+								<option value="{{d.id}}">{{d.ciudad}}</option>
+							{% endfor %}
+							
+						</select>
+						
+					</div>
+				</div>
+				<hr>
+				<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continuar">
+			</form>
+		</div>
+		<br>
+		<!-- METODO DE PAGO -->
+		<div class="box-element hidden" id="payment-info">
+			<p>Opciones de pago</p>
+			<div class="form-field">
+				<form method="post" action={{response.url}}>
+					{% csrf_token %}
+					<input type="hidden" name="token_ws" value={{response.token}} />
+					<input class="btn btn-success btn-block" id="make-payment" type="submit" value="Pago Transbank" />
+				</form>
+			</div>
+		
+			<div class="form-field">
+				<form method="get" action="">
+					<input type="hidden" name="transferencia" value = "no"/>
+					<input class="btn btn-success btn-block" id="make-payment" type="submit" value="Pago Transferencia" />
+				</form>
+			</div>
+		
+		</div>
+	</div>
+
+	<div class="col-lg-6">
+		<div class="box-element">
+			<a class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Seguir comprando</a>
+			<hr>
+			<h3>Orden de Compra</h3>
+			<hr>
+			{% for item in items %}
+			<div class="cart-row">
+				<div style="flex:2"><img class="row-image" src="{{item.producto.imageURL}}"></div>
+				<div style="flex:2">
+					<p>{{item.producto.nom_prod}}</p>
+				</div>
+				<div style="flex:1">
+					<p>${{item.producto.precio}}</p>
+				</div>
+				<div style="flex:1">
+					<p>x{{item.cantidad}}</p>
+				</div>
+			</div>
+			{% endfor %}
+			<h5>Productos: {{order.get_carro_productos}}</h5>
+			<h5>Total: {{order.get_total_carro|floatformat:0}}</h5>
+			{% if user.is_authenticated %}
+				{% if order.get_carro_productos >= 4 %}
+					<h5>Descuento Cliente: 20000</h5>
+					<h5>Precio Final: {{order.get_total_descuento|floatformat:0}}</h5>
+				{% endif %}
+			{% endif %}
+
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var envio = document.getElementById('entrega')
+	var total = '{{order.get_total_descuento|floatformat:0}}'
+
+	envio.addEventListener('change', function(e){
+		if (this.checked){
+			document.getElementById('shipping-info').classList.remove("hidden");
+			document.getElementById('info-sucursal').classList.add("hidden");
+			
+		}else{
+			document.getElementById('shipping-info').classList.add("hidden");
+			document.getElementById('info-sucursal').classList.remove("hidden");
+		}
+	})
+
+
+	var form = document.getElementById('form')
+	form.addEventListener('submit', function(e){
+		e.preventDefault()
+		console.log('form enviado')
+		document.getElementById('form-button').classList.add("hidden");
+		document.getElementById('payment-info').classList.remove("hidden");
+	})
+
+	document.getElementById('make-payment').addEventListener('click', function(e){
+		submitFormData()
+	})
+	function submitFormData(){
+
+
+
+		var shippingInfo = {
+			'address':null,
+			'city':null,
+			'state':null,
+			'zipcode':null,
+			'country':null
+		}
+
+		var sucursal = {
+			'ciudad':null,
+		}
+
+		if (envio.checked){
+			shippingInfo.address = form.address.value
+			shippingInfo.city = form.city.value
+			shippingInfo.state = form.state.value
+			shippingInfo.zipcode = form.zipcode.value
+			shippingInfo.country = form.country.value
+		}else if (envio.checked == false){
+			sucursal.ciudad = form.tienda.value
+
+		}
+
+		var urls2 = '/crear_direccion/'
+		
+		fetch(urls2,{
+			method:'POST',
+			headers:{
+                'Content-Type':'application/json',
+				'X-CSRFToken': csrftoken,
+			},
+			body:JSON.stringify({'shipping':shippingInfo, 'sucursal': sucursal})
+
+		})
+		.then((response)=>response.json())
+	}
+
+
+
+
+</script>
+
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends 'TiendaMPRO/main.html' %}
+{% load static %}
+
+{% block content %}
+<div>
+    <br>
+    <div class="card blockquote text-center">
+        <br>
+        <h4>Registrar Trabajador</h4>
+        <br>
+    </div>
+    <br>
+    <div class="box-element">
+        <form method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+           
+            <button class="btn btn-primary" type="submit">Registrar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends 'TiendaMPRO/base.html' %}
+
+{% load static %}
+
+{% block contenido %}
+<section>
+  <div class="container" style="max-width: 100% !important;">
+    <div class="carrusel">
+      <h2>
+        </h>
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+              aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+              aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+              aria-label="Slide 3"></button>
+          </div>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <a href=""> <img src="{% static 'image/Home.png' %}" class="d-block w-100" alt="logo"></a>
+
+            </div>
+            <div class="carousel-item">
+              <a href=""><img src="{% static 'image/Home2.png' %}" class="d-block w-100" alt="img2"></a>
+            </div>
+            <div class="carousel-item">
+              <a href=""><img src="{% static 'image/Home3.png' %}" class="d-block w-100" alt="img3"></a>
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
+        </div>
+
+    </div>
+  </div>
+
+</section>
+
+<div class="container section-title-container">
+  <h3 class="section-title section-title-center">
+    <b>
+    </b>
+    <span class="section-title-main">Ofertas</span>
+    <b>
+    </b>
+  </h3>
+</div>
+
+<div class="productos-oferta" style="margin-bottom: 500px;"></div>
+
+<div class="container section-title-container">
+  <h3 class="section-title section-title-center">
+    <b>
+    </b>
+    <span class="section-title-main">Productos destacados</span>
+    <b>
+    </b>
+  </h3>
+</div>
+
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+
+<section class="hero-section">
+  <div class="card-grid">
+    <a class="card" href="#">
+      <div class="card__background"
+        style="background-image: url(https://images.unsplash.com/photo-1557177324-56c542165309?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80)">
+      </div>
+      <div class="card__content">
+        <p class="card__category">Category</p>
+        <h3 class="card__heading">Example Card Heading</h3>
+      </div>
+    </a>
+    <a class="card" href="#">
+      <div class="card__background"
+        style="background-image: url(https://images.unsplash.com/photo-1557187666-4fd70cf76254?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60)">
+      </div>
+      <div class="card__content">
+        <p class="card__category">Category</p>
+        <h3 class="card__heading">Example Card Heading</h3>
+      </div>
+    </a>
+    <a class="card" href="#">
+      <div class="card__background"
+        style="background-image: url(https://images.unsplash.com/photo-1556680262-9990363a3e6d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60)">
+      </div>
+      <div class="card__content">
+        <p class="card__category">Category</p>
+        <h3 class="card__heading">Example Card Heading</h3>
+      </div>
+      </li>
+      <a class="card" href="#">
+        <div class="card__background"
+          style="background-image: url(https://images.unsplash.com/photo-1557004396-66e4174d7bf6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60)">
+        </div>
+        <div class="card__content">
+          <p class="card__category">Category</p>
+          <h3 class="card__heading">Example Card Heading</h3>
+        </div>
+      </a>
+      <div>
+</section>
+
+
+<div class="container section-title-container">
+  <h3 class="section-title section-title-center">
+    <b>
+    </b>
+    <span class="section-title-main">Categorías</span>
+    <b>
+    </b>
+  </h3>
+</div>
+
+<div class="container d-flex justify-content-center mt-100" style="margin-top: 30px; padding: 50px;">
+  <div class="row">
+    
+    {% for cg in categ %}
+      <div class="col-md-3">
+        <div class="product-wrapper mb-45 text-center">
+          <div class="product-img"> <a href="#" data-abc="true"> 
+            <img src="https://i.imgur.com/tL7ZE46.jpg" alt=""> </a>
+            <span class="text-center">{{cg.categ_name}}</span>
+            <div class="product-action">
+              <div class="product-action-style"> <a href="#"> <i class="fa fa-plus"></i> </a> <a href="#"> 
+                <i class="fa fa-heart"></i> </a> <a href="#"> <i class="fa fa-shopping-cart"></i> </a> 
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'TiendaMPRO/main.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+	<div class="col-lg-12">
+		<div class="box-element" id="payment-info">
+			<p>Filtros de Busqueda</p>
+			<!-- FORM DE METODO GET -->
+			<form method="get" id="filtro"> 
+				<!-- BUSQUEDA PRODUCTO POR NOMBRE -->
+				<div class="form-field">
+					<label for="busqueda">Busqueda:</label>
+					<input type="search" name="busqueda" id="buscar" class="form-control" placeholder="Buscar" value="{{ request.GET.busqueda }}">
+				</div>
+				<!-- BUSQUEDA POR CBO_CATEG -->
+				<div class="form-field">
+					<label for="cbocateg" id="lbl_categ">Categoria: </label>
+					<select class="form-select primary"  size="1" name="cbocateg" id="categoria">
+						<option value="">Seleccionar</option>
+						{% for c in categ %}
+							<option value="{{ c.id }}">{{ c.categ_name }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<!-- BUSQUEDA POR CBO_SUBCATEG -->
+				<div class="form-field">
+					<label for="cbosubcateg" style="padding-right: 20px;">Sub-Categoria:</label>
+					<select class="form-select primary"  size="1" name="cbosubcateg" id="subcategoria">
+						{% for s in subcateg %}
+							<option value="{{ s.id }}" data-chained="{{ s.categoria.id }}">{{ s.sub_categ_name}}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<!-- BUSQUEDA POR CBO_TIPOPRODUCTO -->
+				<div class="form-field">
+					<label for="cbotipoproducto">Tipo-Producto: </label>
+					<select class="form-select primary"  size="1" name="cbotipoproducto" id="tp_producto">
+						{% for tp in tiposproducto %}
+							<option value="{{ tp.id }}" data-chained="{{ tp.sub_categ.id }}">{{ tp.tipo_name }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<!-- BUTTON SUBMIT -->
+				<button class="btn btn-success" type="submit">Buscar</button>
+			</form>
+		</div>
+	</div>
+	{% for producto in productos %}
+		<div class="col-lg-4">
+			<img class="thumbnail" src="{{producto.imageURL}}">
+			<div class="box-element product">
+				<h6>
+					<strong>{{producto.nom_prod}}</strong>
+				</h6>
+					<hr>
+					<button data-product={{producto.id}} data-action="agregar" class="btn btn-outline-secondary add-btn update-cart">Añadir al carro</button>
+					<!-- <a class="btn btn-outline-success" href="#">Detalles</a> -->
+					<h4 style="display: inline-block; float: right"><strong>${{producto.precio|floatformat:0}}</strong></h4>
+			</div>
+		</div>
+	{% empty %}
+		<!-- EN CASO DE NO HABER ALGUN ELEMENTO EL SE DEVUELVE MENSAHE + QUERYSET BUSCADO -->
+		<h1 class="display-6" id="sin_prod">Lamentamos informar que no se ha encontrado algún producto por "{{q_searched}}"</h1>
+	{% endfor %}
+
+</div>
+{% endblock %}

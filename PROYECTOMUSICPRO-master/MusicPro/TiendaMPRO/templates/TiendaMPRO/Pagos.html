@@ -1,0 +1,47 @@
+{% extends 'TiendaMPRO/main.html' %}
+
+{% load static %}
+
+{% block content %}
+<br>
+<h1>Vista de Contabilidad</h1>
+
+<br>
+<table class="table tbl_cont">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">N° de pago</th>
+            <th scope="col">N° Orden</th>
+            <th scope="col">N° cuenta</th>
+            <th scope="col">Monto Transferido</th>
+            <th scope="col">Valor Total Orden</th>
+            <th scope="col">Mensaje</th>
+            <th scope="col">Aceptar</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in pagos %}
+        <tr>
+            {% if p.order.transferencia %}
+                {% if p.order.pagado == False %}
+                <td data-label="N° de pago">{{p.id}}</td>
+                <td data-label="N° Orden">{{p.order}}</td>
+                <td data-label="N° cuenta">{{p.cuenta_id|floatformat:0}}</td>
+                <td data-label="Monto Transferido">${{p.monto|floatformat:0}}</td>
+                <td data-label="Valor Total Orden">${{ p.order.get_total_descuento|floatformat:0}}</td>
+                <td data-label="Mensaje">{{p.mensaje}}</td>
+                <td data-label="Aceptar">
+                    <form method="get" action="">
+                        <input type="hidden" name="order" value="{{ p.order }}" />
+                        <input class="btn btn-success btn-block" {% ifnotequal p.monto p.order.get_total_descuento %}
+                            disabled {% endifnotequal %} type="submit" value="Aceptar pago" />
+                    </form>
+                </td>
+                {% endif %}
+            {% endif %}
+        </tr>
+        {% endfor %}
+</table>
+
+
+{% endblock %}
